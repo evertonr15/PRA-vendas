@@ -1,6 +1,8 @@
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 public abstract class Utils {
 
@@ -52,7 +54,9 @@ public abstract class Utils {
 	}
 
 	public static int aleatorioInt(int nrInicial, int nrFinal) {
+
 		int numeroGerado = 0;
+
 		if (nrInicial == nrFinal) {
 			numeroGerado = nrFinal;
 		} else if (nrInicial > nrFinal) {
@@ -78,4 +82,80 @@ public abstract class Utils {
 
 	}
 
+	public static int menu() {
+		
+		
+		int opcao = 0;
+		
+		Scanner escolhaMenu = new Scanner(System.in);
+	
+		System.out.println("\n\n################## Sistema de Vendas ##################");
+		System.out.println("\n                ===========================");
+		System.out.println("                  |     1 - Gerar Base      |");
+		System.out.println("                  |     2 - Consultar Base  |");
+		System.out.println("                  |     0 - Sair            |");
+		System.out.println("                  =========================\n");
+
+		System.out.print("Opção: ");
+		opcao = escolhaMenu.nextInt();
+
+		escolhaMenu.close();
+		
+		switch (opcao) {
+		case 1:
+			return(subMenu1());
+		
+		case 2:
+			//return(subMenu2());
+			return(opcao);
+		
+		default:
+			return(opcao);
+		}
+		
+	}
+	
+	public static int subMenu1() {
+		
+		
+		int op1;
+		
+		Scanner escolhaSubMenu = new Scanner(System.in);
+	
+		System.out.println("\n\n################## Gerar Base de Dados ##################");
+		System.out.println("\n       ===========================================");
+		System.out.println("         |     1 - Por número de registros     |");
+		System.out.println("         |     2 - Pelo tamanho do arquivo     |");
+		System.out.println("         |     0 - Sair                        |");
+		System.out.println("         ===========================================\n");
+
+		System.out.print("Opção: ");
+		op1 = escolhaSubMenu.nextInt();
+
+		escolhaSubMenu.close();
+		
+		return(op1);
+		
+	}
+	
+	public static void geraUmPedido(int nPedidos, List<Cliente> clientes, List<Produtos> produtos, List<Vendedor> vendedor) {
+		
+		int aleatorioSuubListProdutosMin = aleatorioInt(0, produtos.size() - 1);
+		int aleatorioSuubListProdutosMax = aleatorioInt(aleatorioSuubListProdutosMin, produtos.size() - 1);
+		
+		if (aleatorioSuubListProdutosMin == aleatorioSuubListProdutosMax) {
+			if (aleatorioSuubListProdutosMin == 0 && aleatorioSuubListProdutosMax < produtos.size() - 1) {
+				aleatorioSuubListProdutosMax++;
+			} else {
+				aleatorioSuubListProdutosMin--;
+			}
+		}
+		
+		Calendar dataDoPedido = Calendar.getInstance();
+		dataDoPedido.add(Calendar.DAY_OF_YEAR, aleatorioInt(1, 200));
+		
+		new Pedido(nPedidos,vendedor.get(aleatorioInt(0, vendedor.size() - 1)),
+				clientes.get(aleatorioInt(0, clientes.size() - 1)), dataDoPedido,
+				produtos.subList(aleatorioSuubListProdutosMin, aleatorioSuubListProdutosMax));
+	}
 }
