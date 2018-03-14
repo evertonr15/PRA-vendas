@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -81,60 +82,11 @@ public abstract class Utils {
 		return (gerador.nextFloat() * gerador.nextInt(mult + 1) + 1);
 
 	}
-
-	public static int menu() {
-		
-		
-		int opcao = 0;
-		
-		Scanner escolhaMenu = new Scanner(System.in);
 	
-		System.out.println("\n\n################## Sistema de Vendas ##################");
-		System.out.println("\n                ===========================");
-		System.out.println("                  |     1 - Gerar Base      |");
-		System.out.println("                  |     2 - Consultar Base  |");
-		System.out.println("                  |     0 - Sair            |");
-		System.out.println("                  =========================\n");
-
-		System.out.print("Opção: ");
-		opcao = escolhaMenu.nextInt();
-
-		escolhaMenu.close();
+	public static long tamanhoArquivo(String nome) {
 		
-		switch (opcao) {
-		case 1:
-			return(subMenu1());
-		
-		case 2:
-			//return(subMenu2());
-			return(opcao);
-		
-		default:
-			return(opcao);
-		}
-		
-	}
-	
-	public static int subMenu1() {
-		
-		
-		int op1;
-		
-		Scanner escolhaSubMenu = new Scanner(System.in);
-	
-		System.out.println("\n\n################## Gerar Base de Dados ##################");
-		System.out.println("\n       ===========================================");
-		System.out.println("         |     1 - Por número de registros     |");
-		System.out.println("         |     2 - Pelo tamanho do arquivo     |");
-		System.out.println("         |     0 - Sair                        |");
-		System.out.println("         ===========================================\n");
-
-		System.out.print("Opção: ");
-		op1 = escolhaSubMenu.nextInt();
-
-		escolhaSubMenu.close();
-		
-		return(op1);
+		File file = new File(nome);
+		return(file.length());
 		
 	}
 	
