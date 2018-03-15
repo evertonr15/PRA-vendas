@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Main {
 
 	public static void main(String[] args) {
-		List<Cliente> clientes = Utils.criaCliente();
+		List<Cliente> clientes = Utils.criaClientes();
 		List<Produtos> produtos = Utils.criaProdutos();
 		List<Vendedor> vendedor = Utils.criaVendedor();
 		int escolha;

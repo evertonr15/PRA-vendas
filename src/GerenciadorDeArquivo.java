@@ -3,7 +3,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 public class GerenciadorDeArquivo {
@@ -89,6 +88,17 @@ public class GerenciadorDeArquivo {
 			while ((linhaAtual = buffReader.readLine()) != null) {
 				System.out.print(linhaAtual);
 				System.out.print("\n");
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	public void recuperarArquivoGUI() {
+		String linhaAtual = null;
+		try {
+			while ((linhaAtual = buffReader.readLine()) != null) {
+				GUI.campoDeInformacoesGerais.setText(GUI.campoDeInformacoesGerais.getText() + "\n   " + linhaAtual);
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();

@@ -27,7 +27,7 @@ public abstract class Utils {
 		return produtos;
 	}
 
-	public static List<Cliente> criaCliente() {
+	public static List<Cliente> criaClientes() {
 		List<Cliente> clientes = new ArrayList<>();
 
 		while (clientes.size() < 100) {
