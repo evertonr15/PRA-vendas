@@ -1,9 +1,7 @@
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 
 public abstract class Utils {
 
@@ -11,47 +9,46 @@ public abstract class Utils {
 		List<Produtos> produtos = new ArrayList<>();
 
 		do {
-			Produtos pro = new Produtos(aleatorioInt(100, 999), aleatorioFloat(1000));
+			Produtos produto = new Produtos(aleatorioInt(100, 999), aleatorioFloat(1000));
 
 			int repete = 0;
 			for (int i = 0; i < produtos.size(); i++) {
-
-				if (pro.getCodigoProduto() == produtos.get(i).getCodigoProduto()) {
+				if (produto.getCodigoProduto() == produtos.get(i).getCodigoProduto()) {
 					repete = 1;
 					break;
 				}
 			}
 
-			if (repete == 0)
-				produtos.add(pro);
-
+			if (repete == 0) {
+				produtos.add(produto);
+			}
 		} while (produtos.size() < 100);
 
 		return produtos;
 	}
 
 	public static List<Cliente> criaCliente() {
-		List<Cliente> cliente = new ArrayList<>();
+		List<Cliente> clientes = new ArrayList<>();
 
-		while (cliente.size() < 100) {
-			Cliente cli = new Cliente(aleatorioInt(1, 999));
-			cliente.add(cli);
+		while (clientes.size() < 100) {
+			Cliente cliente = new Cliente(aleatorioInt(1, 999));
+			clientes.add(cliente);
 		}
 
-		return cliente;
+		return clientes;
 	}
 
 	public static List<Vendedor> criaVendedor() {
-		List<Vendedor> vendedor = new ArrayList<>();
+		List<Vendedor> vendedores = new ArrayList<>();
 
-		int i = 1;
-		while (vendedor.size() < 10) {
-			Vendedor vend = new Vendedor(i);
-			vendedor.add(vend);
-			i++;
+		int codigoDoVendedor = 1;
+		while (vendedores.size() < 10) {
+			Vendedor vendedor = new Vendedor(codigoDoVendedor);
+			vendedores.add(vendedor);
+			codigoDoVendedor++;
 		}
 
-		return vendedor;
+		return vendedores;
 	}
 
 	public static int aleatorioInt(int nrInicial, int nrFinal) {
@@ -71,30 +68,18 @@ public abstract class Utils {
 				numeroGerado = aleatorioInt(nrInicial, nrFinal);
 			}
 		}
-
 		return numeroGerado;
-
 	}
 
 	public static float aleatorioFloat(int mult) {
-
 		Random gerador = new Random();
 		return (gerador.nextFloat() * gerador.nextInt(mult + 1) + 1);
+	}
 
-	}
-	
-	public static long tamanhoArquivo(String nome) {
-		
-		File file = new File(nome);
-		return(file.length());
-		
-	}
-	
-	public static void geraUmPedido(int nPedidos, List<Cliente> clientes, List<Produtos> produtos, List<Vendedor> vendedor) {
-		
+	public static void geraUmPedido(int nPedidos, List<Cliente> clientes, List<Produtos> produtos, List<Vendedor> vendedor, GerenciadorDeArquivo gerenciadorDeArquivo) {
 		int aleatorioSuubListProdutosMin = aleatorioInt(0, produtos.size() - 1);
 		int aleatorioSuubListProdutosMax = aleatorioInt(aleatorioSuubListProdutosMin, produtos.size() - 1);
-		
+
 		if (aleatorioSuubListProdutosMin == aleatorioSuubListProdutosMax) {
 			if (aleatorioSuubListProdutosMin == 0 && aleatorioSuubListProdutosMax < produtos.size() - 1) {
 				aleatorioSuubListProdutosMax++;
@@ -102,12 +87,17 @@ public abstract class Utils {
 				aleatorioSuubListProdutosMin--;
 			}
 		}
-		
+
 		Calendar dataDoPedido = Calendar.getInstance();
 		dataDoPedido.add(Calendar.DAY_OF_YEAR, aleatorioInt(1, 200));
-		
-		new Pedido(nPedidos,vendedor.get(aleatorioInt(0, vendedor.size() - 1)),
-				clientes.get(aleatorioInt(0, clientes.size() - 1)), dataDoPedido,
-				produtos.subList(aleatorioSuubListProdutosMin, aleatorioSuubListProdutosMax));
+
+		new Pedido(
+				nPedidos, 
+				vendedor.get(aleatorioInt(0, vendedor.size() - 1)),
+				clientes.get(aleatorioInt(0, clientes.size() - 1)), 
+				dataDoPedido,
+				produtos.subList(aleatorioSuubListProdutosMin, aleatorioSuubListProdutosMax), 
+				gerenciadorDeArquivo
+		);
 	}
 }

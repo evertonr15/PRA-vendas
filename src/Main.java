@@ -1,26 +1,20 @@
-import java.io.File;
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
-		
-		int escolha;
-		
 		List<Cliente> clientes = Utils.criaCliente();
 		List<Produtos> produtos = Utils.criaProdutos();
 		List<Vendedor> vendedor = Utils.criaVendedor();
-		
+		int escolha;
 		Scanner s = new Scanner(System.in);
-		
+		GerenciadorDeArquivo arquivoDeVendas = new GerenciadorDeArquivo();
+		long tempoInicial;
+		long tempoExecucao;
+
 		do {
-			
 			System.out.println("\n\n################## Sistema de Vendas ##################");
 			System.out.println("\n      ======================================================");
 			System.out.println("        |     Gerar Base                        |");
@@ -37,69 +31,81 @@ public class Main {
 			System.out.print("Opção: ");
 			escolha = s.nextInt();
 			System.out.println();
-			
+
+			int nPedido = 1;
+
 			switch (escolha) {
 			case 0:
 				System.out.println("Você decidiu sair!");
 				break;
-				
-			case 1: // O usuário escolheu "n" vendas 
+
+			case 1: // O usuário escolheu "n" vendas
 				System.out.print("Informe a qntd. de vendas: ");
 				int qtdVendas = s.nextInt();
 				System.out.println();
-				
-				int count = 0,  nPedidos=1;
-				while (count < qtdVendas) {
-					Utils.geraUmPedido(nPedidos, clientes, produtos, vendedor); // Vamos Usar o mesmo código no case 2.
-					count++;
-				}
-				
-				break;
-				
-			case 2: // O usuário escolheu "n" vendas 
-				
-				long tamSolicitado, tamAtual;
-				int nPedido = 1;
-				
-				System.out.println("Informe o tamanho do arquivo: ");
-				tamSolicitado = s.nextLong();
-				System.out.println();
-				
-				tamAtual = Utils.tamanhoArquivo("vendas.txt");
-				
-				
-				while(tamAtual < tamSolicitado) {
-					
-					Utils.geraUmPedido(nPedido, clientes, produtos, vendedor);
-					tamAtual = Utils.tamanhoArquivo("vendas.txt");
-					
-				}
-					
-				System.out.println("Tamanho final: "+tamAtual);
+				tempoInicial = Calendar.getInstance().getTimeInMillis();
+				arquivoDeVendas.criarEAbrirArquivoParaEscrita();
 
+				while (nPedido <= qtdVendas) {
+					Utils.geraUmPedido(nPedido, clientes, produtos, vendedor, arquivoDeVendas);
+					nPedido++;
+				}
+
+				arquivoDeVendas.fecharArquivoParaEscrita();
+				tempoExecucao = Calendar.getInstance().getTimeInMillis() - tempoInicial;
+				System.out.println("Tempo de escrita: "+tempoExecucao+" milissegundos");
+				System.out.println();
 				break;
-			
+
+			case 2: // O usuário escolheu "n" (KB) tamanho do arquivo
+
+				long tamSolicitado;
+
+				System.out.println("Informe o tamanho do arquivo (KB): ");
+				tamSolicitado = (s.nextLong() * 1024);
+				System.out.println();
+
+				tempoInicial = Calendar.getInstance().getTimeInMillis();
+				arquivoDeVendas.criarEAbrirArquivoParaEscrita();
+
+				while (arquivoDeVendas.tamanhoDoArquivo() < tamSolicitado) {
+					Utils.geraUmPedido(nPedido, clientes, produtos, vendedor, arquivoDeVendas);
+					nPedido++;
+				}
+				arquivoDeVendas.fecharArquivoParaEscrita();
+				tempoExecucao = Calendar.getInstance().getTimeInMillis() - tempoInicial;
+				System.out.println("Tempo de escrita: "+tempoExecucao+" milissegundos");
+				System.out.println();
+				System.out.println("Tamanho final: " + (arquivoDeVendas.tamanhoDoArquivo() / 1024) + " KB");
+				break;
+
 			case 3:
 				/*
-				 * Consultar Base 
-				 * Pode ser mais um subMenu, com:
+				 * Consultar Base Pode ser mais um subMenu, com:
 				 * 
-				 * Recuperar os registros por meio da paginação;
-				 * Recuperar todos os registros;
+				 * Recuperar os registros por meio da paginação; Recuperar todos os registros;
 				 * Etc
 				 * 
 				 */
 				break;
 				
+			case 4:
+				tempoInicial = Calendar.getInstance().getTimeInMillis();
+				arquivoDeVendas.abrirArquivoParaLeitura();
+				arquivoDeVendas.recuperarArquivo();
+				arquivoDeVendas.fecharArquivoParaLeitura();
+				tempoExecucao = Calendar.getInstance().getTimeInMillis() - tempoInicial;
+				System.out.println("Tempo de leitura: "+tempoExecucao+" milissegundos");
+				break;
+				
 			default:
 				System.out.println("Opção Inválida!");
 				break;
-			
+
 			}
-			
-		} while(escolha != 0);
-		
+
+		} while (escolha != 0);
+
 		s.close();
 	}
-
 }

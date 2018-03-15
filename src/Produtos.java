@@ -1,3 +1,4 @@
+import java.text.DecimalFormat;
 
 public class Produtos {
 
@@ -19,6 +20,7 @@ public class Produtos {
 
 	@Override
 	public String toString() {
-		return "{Código: " + codigoProduto + ", Valor: " + valorProduto + "}";
+		DecimalFormat decimalFormater = new DecimalFormat("#,###.00");
+		return "{Código: " + codigoProduto + ", Valor: R$ " + decimalFormater.format(valorProduto) + "}";
 	}
 }
