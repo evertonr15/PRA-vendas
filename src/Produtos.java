@@ -20,7 +20,6 @@ public class Produtos {
 
 	@Override
 	public String toString() {
-		DecimalFormat decimalFormater = new DecimalFormat("#,###.00");
-		return "{Código: " + codigoProduto + ", Valor: R$ " + decimalFormater.format(valorProduto) + "}";
+		return "/"+codigoProduto + ":" + valorProduto;
 	}
 }

@@ -47,7 +47,7 @@ public class Main {
 				arquivoDeVendas.criarEAbrirArquivoParaEscrita();
 
 				while (nPedido <= qtdVendas) {
-					Utils.geraUmPedido(nPedido, clientes, produtos, vendedor, arquivoDeVendas);
+					Utils.geraUmPedido(nPedido, clientes, produtos, vendedor);
 					nPedido++;
 				}
 
@@ -69,7 +69,7 @@ public class Main {
 				arquivoDeVendas.criarEAbrirArquivoParaEscrita();
 
 				while (arquivoDeVendas.tamanhoDoArquivo() < tamSolicitado) {
-					Utils.geraUmPedido(nPedido, clientes, produtos, vendedor, arquivoDeVendas);
+					Utils.geraUmPedido(nPedido, clientes, produtos, vendedor);
 					nPedido++;
 				}
 				arquivoDeVendas.fecharArquivoParaEscrita();
