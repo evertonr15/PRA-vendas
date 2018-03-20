@@ -76,7 +76,8 @@ public abstract class Utils {
 		return (gerador.nextFloat() * gerador.nextInt(mult + 1) + 1);
 	}
 
-	public static Pedido geraUmPedido(int nPedidos, List<Cliente> clientes, List<Produtos> produtos, List<Vendedor> vendedor) {
+	public static Pedido geraUmPedido(int nPedidos, List<Cliente> clientes, List<Produtos> produtos,
+			List<Vendedor> vendedor) {
 		int aleatorioSuubListProdutosMin = aleatorioInt(0, produtos.size() - 1);
 		int aleatorioSuubListProdutosMax = aleatorioInt(aleatorioSuubListProdutosMin, produtos.size() - 1);
 
@@ -91,12 +92,8 @@ public abstract class Utils {
 		Calendar dataDoPedido = Calendar.getInstance();
 		dataDoPedido.add(Calendar.DAY_OF_YEAR, aleatorioInt(1, 200));
 
-		return new Pedido(
-				nPedidos, 
-				vendedor.get(aleatorioInt(0, vendedor.size() - 1)),
-				clientes.get(aleatorioInt(0, clientes.size() - 1)), 
-				dataDoPedido,
-				produtos.subList(aleatorioSuubListProdutosMin, aleatorioSuubListProdutosMax)
-		);
+		return new Pedido(nPedidos, vendedor.get(aleatorioInt(0, vendedor.size() - 1)),
+				clientes.get(aleatorioInt(0, clientes.size() - 1)), dataDoPedido,
+				produtos.subList(aleatorioSuubListProdutosMin, aleatorioSuubListProdutosMax));
 	}
 }

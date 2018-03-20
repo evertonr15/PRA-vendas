@@ -3,27 +3,27 @@ import java.util.Calendar;
 import java.util.List;
 
 public class Pedido {
-	
+
 	private int codigoPedido;
-	
+
 	private Vendedor vendedor;
-	
+
 	private Cliente cliente;
-	
+
 	private String dataPedido;
-	
+
 	private List<Produtos> produtos;
 
 	private float totalDaVenda;
-	
+
 	public Pedido(int codigoPedido, Vendedor vendedor, Cliente cliente, Calendar dataPedido, List<Produtos> produtos) {
-		
+
 		this.setCodigoPedido(codigoPedido);
 		this.setVendedor(vendedor);
 		this.setCliente(cliente);
 		this.setDataPedido(new SimpleDateFormat("dd/MM/yyyy").format(dataPedido.getTime()));
 		this.setProdutos(produtos);
-		
+
 		float totalDaVenda = 0f;
 		for (Produtos produto : produtos) {
 			totalDaVenda += produto.getValorProduto();
@@ -78,6 +78,5 @@ public class Pedido {
 	public void setTotalDaVenda(float totalDaVenda) {
 		this.totalDaVenda = totalDaVenda;
 	}
-	
-	
+
 }

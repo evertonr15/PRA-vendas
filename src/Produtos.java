@@ -1,5 +1,3 @@
-import java.text.DecimalFormat;
-
 public class Produtos {
 
 	float valorProduto;
@@ -20,6 +18,6 @@ public class Produtos {
 
 	@Override
 	public String toString() {
-		return "/"+codigoProduto + ":" + valorProduto;
+		return "/" + codigoProduto + ":" + valorProduto;
 	}
 }

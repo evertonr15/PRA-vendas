@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class GerenciadorDeArquivo {
 
@@ -16,9 +19,9 @@ public class GerenciadorDeArquivo {
 	FileWriter fWriter = null;
 
 	BufferedWriter buffWriter = null;
-	
+
 	FileReader fReader = null;
-	
+
 	BufferedReader buffReader = null;
 
 	public void criarEAbrirArquivoParaEscrita() {
@@ -54,13 +57,13 @@ public class GerenciadorDeArquivo {
 	public void salvaPedido(Pedido pedido) {
 		try {
 			if (buffWriter != null) {
-				String informacoesDoPedido = ""+pedido.getCodigoPedido();
-				informacoesDoPedido += ";"+ pedido.getCliente().getCodigoCliente();
-				informacoesDoPedido += ";"+ pedido.getVendedor().getCodigoVendedor();
-				informacoesDoPedido += ";"+ pedido.getDataPedido();
-				informacoesDoPedido += ";"+ pedido.getTotalDaVenda();
-				informacoesDoPedido += ";"+ pedido.getProdutos().toString();
-				
+				String informacoesDoPedido = "" + pedido.getCodigoPedido();
+				informacoesDoPedido += ";" + pedido.getCliente().getCodigoCliente();
+				informacoesDoPedido += ";" + pedido.getVendedor().getCodigoVendedor();
+				informacoesDoPedido += ";" + pedido.getDataPedido();
+				informacoesDoPedido += ";" + pedido.getTotalDaVenda();
+				informacoesDoPedido += ";" + pedido.getProdutos().toString();
+
 				buffWriter.write(informacoesDoPedido);
 				buffWriter.newLine();
 			}
@@ -68,18 +71,18 @@ public class GerenciadorDeArquivo {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void salvaPedidoPaginacao(List<Pedido> pedidos) {
 		try {
 			if (buffWriter != null) {
 				String informacoesDoPedido = "";
-				for(Pedido pedido : pedidos){
-					informacoesDoPedido = ""+pedido.getCodigoPedido();
-					informacoesDoPedido += ";"+ pedido.getCliente().getCodigoCliente();
-					informacoesDoPedido += ";"+ pedido.getVendedor().getCodigoVendedor();
-					informacoesDoPedido += ";"+ pedido.getDataPedido();
-					informacoesDoPedido += ";"+ pedido.getTotalDaVenda();
-					informacoesDoPedido += ";"+ pedido.getProdutos().toString();
+				for (Pedido pedido : pedidos) {
+					informacoesDoPedido = "" + pedido.getCodigoPedido();
+					informacoesDoPedido += ";" + pedido.getCliente().getCodigoCliente();
+					informacoesDoPedido += ";" + pedido.getVendedor().getCodigoVendedor();
+					informacoesDoPedido += ";" + pedido.getDataPedido();
+					informacoesDoPedido += ";" + pedido.getTotalDaVenda();
+					informacoesDoPedido += ";" + pedido.getProdutos().toString();
 					buffWriter.write(informacoesDoPedido);
 					buffWriter.newLine();
 				}
@@ -88,7 +91,7 @@ public class GerenciadorDeArquivo {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void abrirArquivoParaLeitura() {
 		try {
 			fReader = new FileReader(nomeDoArquivo);
@@ -97,7 +100,7 @@ public class GerenciadorDeArquivo {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void fecharArquivoParaLeitura() {
 		try {
 			if (fReader != null) {
@@ -122,15 +125,12 @@ public class GerenciadorDeArquivo {
 			ex.printStackTrace();
 		}
 	}
+
 	/*
-	 *  registroDoPedido:
-	 *  
-	 	0-codigoPedido
-		1-cliente.getCodigoCliente() 
-		2-vendedor.getCodigoVendedor()
-		3-dataDoPedido 
-		4-totalDaVenda 
-		5-produtos.toString()
+	 * registroDoPedido:
+	 * 
+	 * 0-codigoPedido 1-cliente.getCodigoCliente() 2-vendedor.getCodigoVendedor()
+	 * 3-dataDoPedido 4-totalDaVenda 5-produtos.toString()
 	 */
 	public void recuperarArquivoGUI() {
 		String linhaAtual = null;
@@ -138,22 +138,85 @@ public class GerenciadorDeArquivo {
 		try {
 			while ((linhaAtual = buffReader.readLine()) != null) {
 				String[] registroDoPedido = linhaAtual.split(";");
-				
-				GUI.campoDeInformacoesGerais.setText(GUI.campoDeInformacoesGerais.getText() + "\n   " + "Código do pedido: " + registroDoPedido[0]);
-				GUI.campoDeInformacoesGerais.setText(GUI.campoDeInformacoesGerais.getText() + "\n   " + "Código do vendedor: " + registroDoPedido[2]);
-				GUI.campoDeInformacoesGerais.setText(GUI.campoDeInformacoesGerais.getText() + "\n   " + "Data do pedido: " + registroDoPedido[3]);
-				GUI.campoDeInformacoesGerais.setText(GUI.campoDeInformacoesGerais.getText() + "\n   " + "Código do Cliente: " + registroDoPedido[1]);
-				
-				GUI.campoDeInformacoesGerais.setText(GUI.campoDeInformacoesGerais.getText() + "\n   " + "Produtos: ");
+
+				GUI.campoDeRetornoPaginacao.setText(
+						GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Código do pedido: " + registroDoPedido[0]);
+				GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n   "
+						+ "Código do vendedor: " + registroDoPedido[2]);
+				GUI.campoDeRetornoPaginacao.setText(
+						GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Data do pedido: " + registroDoPedido[3]);
+				GUI.campoDeRetornoPaginacao.setText(
+						GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Código do Cliente: " + registroDoPedido[1]);
+
+				GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Produtos: ");
 				String produtosToString = registroDoPedido[5].substring(1, registroDoPedido[5].length() - 1);
 				String[] produtos = produtosToString.split("/");
 				for (Object produto : produtos) {
-					if(!produto.toString().equals("")){
-						String[] produtosSplit = ((String)produto).split(":");
-						GUI.campoDeInformacoesGerais.setText(GUI.campoDeInformacoesGerais.getText() + "\n   " + "    Código do produto: "+ produtosSplit[0]+ " Valor do produto: R$ "+decimalFormater.format(Float.valueOf(produtosSplit[1].trim().substring(0, produtosSplit[1].length() - 2))));
+					if (!produto.toString().equals("")) {
+						String[] produtosSplit = ((String) produto).split(":");
+						GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n   "
+								+ "    Código do produto: " + produtosSplit[0] + " Valor do produto: R$ "
+								+ decimalFormater.format(Float
+										.valueOf(produtosSplit[1].trim().substring(0, produtosSplit[1].length() - 2))));
 					}
 				}
-				GUI.campoDeInformacoesGerais.setText(GUI.campoDeInformacoesGerais.getText() + "\n   " + "Total do pedido: R$ "+decimalFormater.format(Float.valueOf(registroDoPedido[4])));
+				GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n   "
+						+ "Total do pedido: R$ " + decimalFormater.format(Float.valueOf(registroDoPedido[4])));
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	/*
+	 * registroDoPedido:
+	 * 
+	 * 0-codigoPedido 
+	 * 1-cliente.getCodigoCliente() 
+	 * 2-vendedor.getCodigoVendedor()
+	 * 3-dataDoPedido 
+	 * 4-totalDaVenda 
+	 * 5-produtos.toString()
+	 */
+	public void recuperarArquivoPaginacaoGUI2(int qtdRegistroPagina) {
+		String informacaoLinhaAtual = null;
+		DecimalFormat decimalFormater = new DecimalFormat("#,###.00");
+		GUI.fimPaginacao = true;
+		try {
+			int posicaoLinhaDeOrigem = qtdRegistroPagina * GUI.paginaAtual;
+			int posicaoLinhaAtual = 0;
+			while (posicaoLinhaAtual < posicaoLinhaDeOrigem && (informacaoLinhaAtual = buffReader.readLine()) != null) {
+				posicaoLinhaAtual++;
+			}
+			posicaoLinhaAtual = 0;
+			while ((informacaoLinhaAtual = buffReader.readLine()) != null && posicaoLinhaAtual < qtdRegistroPagina) {
+				GUI.fimPaginacao = false;
+				String[] registroDoPedido = informacaoLinhaAtual.split(";");
+
+				GUI.campoDeRetornoPaginacao.setText(
+						GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Código do pedido: " + registroDoPedido[0]);
+				GUI.campoDeRetornoPaginacao.setText(
+						GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Código do vendedor: " + registroDoPedido[2]);
+				GUI.campoDeRetornoPaginacao.setText(
+						GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Data do pedido: " + registroDoPedido[3]);
+				GUI.campoDeRetornoPaginacao.setText(
+						GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Código do Cliente: " + registroDoPedido[1]);
+
+				GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Produtos: ");
+				String produtosToString = registroDoPedido[5].substring(1, registroDoPedido[5].length() - 1);
+				String[] produtos = produtosToString.split("/");
+				for (Object produto : produtos) {
+					if (!produto.toString().equals("")) {
+						String[] produtosSplit = ((String) produto).split(":");
+						GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n   "
+								+ "    Código do produto: " + produtosSplit[0] + " Valor do produto: R$ "
+								+ decimalFormater.format(Float
+										.valueOf(produtosSplit[1].trim().substring(0, produtosSplit[1].length() - 2))));
+					}
+				}
+				GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n   "
+						+ "Total do pedido: R$ " + decimalFormater.format(Float.valueOf(registroDoPedido[4])) + "\n");
+				posicaoLinhaAtual++;
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -162,5 +225,17 @@ public class GerenciadorDeArquivo {
 
 	public long tamanhoDoArquivo() {
 		return arquivo != null ? arquivo.length() : 0;
+	}
+
+	public long quantidadeDeLinhasDoArquivo() {
+		long numOfLines = 0;
+		if (arquivo != null) {
+			try (Stream<String> lines = Files.lines(arquivo.toPath(), Charset.defaultCharset())) {
+				numOfLines = lines.count();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return numOfLines;
 	}
 }
