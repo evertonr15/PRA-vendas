@@ -54,7 +54,7 @@ public class GerenciadorDeArquivo {
 		}
 	}
 
-	public void salvaPedido(Pedido pedido) {
+	public void salvaPedido(Pedido pedido) { // Escreve no arquivo pedido a pedido
 		try {
 			if (buffWriter != null) {
 				String informacoesDoPedido = "" + pedido.getCodigoPedido();
@@ -72,7 +72,7 @@ public class GerenciadorDeArquivo {
 		}
 	}
 
-	public void salvaPedidoPaginacao(List<Pedido> pedidos) {
+	public void salvaPedidoPaginacao(List<Pedido> pedidos) { // Escreve no arquivo por meio de uma lista de pedidos
 		try {
 			if (buffWriter != null) {
 				String informacoesDoPedido = "";
@@ -90,7 +90,7 @@ public class GerenciadorDeArquivo {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	} 
 
 	public void abrirArquivoParaLeitura() {
 		try {

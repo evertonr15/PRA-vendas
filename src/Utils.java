@@ -5,11 +5,11 @@ import java.util.Random;
 
 public abstract class Utils {
 
-	public static List<Produtos> criaProdutos() {
-		List<Produtos> produtos = new ArrayList<>();
+	public static List<Produtos> criaProdutos() { // método que cria produtos
+		List<Produtos> produtos = new ArrayList<>(); // cria uma lista de produtos
 
 		do {
-			Produtos produto = new Produtos(aleatorioInt(100, 999), aleatorioFloat(1000));
+			Produtos produto = new Produtos(aleatorioInt(100, 999), aleatorioFloat(1000)); // código do produto varia entre 100 a 999 e o valor é um número aleatório multiplicado por 1000
 
 			int repete = 0;
 			for (int i = 0; i < produtos.size(); i++) {
@@ -22,28 +22,28 @@ public abstract class Utils {
 			if (repete == 0) {
 				produtos.add(produto);
 			}
-		} while (produtos.size() < 100);
+		} while (produtos.size() < 100); // define uma lista de 100 produtos
 
 		return produtos;
 	}
 
-	public static List<Cliente> criaClientes() {
-		List<Cliente> clientes = new ArrayList<>();
+	public static List<Cliente> criaClientes() { // método que cria clientes
+		List<Cliente> clientes = new ArrayList<>(); // cria uma lista de clientes
 
-		while (clientes.size() < 100) {
-			Cliente cliente = new Cliente(aleatorioInt(1, 999));
+		while (clientes.size() < 100) { // define uma lista de 100 clientes
+			Cliente cliente = new Cliente(aleatorioInt(1, 999)); // código do cliente varia entre 1 a 999
 			clientes.add(cliente);
 		}
 
 		return clientes;
 	}
 
-	public static List<Vendedor> criaVendedor() {
-		List<Vendedor> vendedores = new ArrayList<>();
+	public static List<Vendedor> criaVendedor() { // método que cria vendedores
+		List<Vendedor> vendedores = new ArrayList<>(); // cria uma lista de vendedores
 
 		int codigoDoVendedor = 1;
-		while (vendedores.size() < 10) {
-			Vendedor vendedor = new Vendedor(codigoDoVendedor);
+		while (vendedores.size() < 10) { // define uma lista de 10 vendedores
+			Vendedor vendedor = new Vendedor(codigoDoVendedor); 
 			vendedores.add(vendedor);
 			codigoDoVendedor++;
 		}
@@ -51,7 +51,7 @@ public abstract class Utils {
 		return vendedores;
 	}
 
-	public static int aleatorioInt(int nrInicial, int nrFinal) {
+	public static int aleatorioInt(int nrInicial, int nrFinal) { // método que gera números aleatórios inteiros
 
 		int numeroGerado = 0;
 
@@ -71,12 +71,12 @@ public abstract class Utils {
 		return numeroGerado;
 	}
 
-	public static float aleatorioFloat(int mult) {
+	public static float aleatorioFloat(int mult) { // método que gera números aleatórios float
 		Random gerador = new Random();
 		return (gerador.nextFloat() * gerador.nextInt(mult + 1) + 1);
 	}
 
-	public static Pedido geraUmPedido(int nPedidos, List<Cliente> clientes, List<Produtos> produtos,
+	public static Pedido geraUmPedido(int nPedidos, List<Cliente> clientes, List<Produtos> produtos, // método que gera aleatoriamente um pedido
 			List<Vendedor> vendedor) {
 		int aleatorioSuubListProdutosMin = aleatorioInt(0, produtos.size() - 1);
 		int aleatorioSuubListProdutosMax = aleatorioInt(aleatorioSuubListProdutosMin, produtos.size() - 1);
