@@ -114,55 +114,45 @@ public class GerenciadorDeArquivo {
 		}
 	}
 
-	public void recuperarArquivo() {
-		String linhaAtual = null;
-		try {
-			while ((linhaAtual = buffReader.readLine()) != null) {
-				System.out.print(linhaAtual);
-				System.out.print("\n");
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-
 	/*
 	 * registroDoPedido:
 	 * 
-	 * 0-codigoPedido 1-cliente.getCodigoCliente() 2-vendedor.getCodigoVendedor()
-	 * 3-dataDoPedido 4-totalDaVenda 5-produtos.toString()
+	 * 0-codigoPedido 
+	 * 1-cliente.getCodigoCliente() 
+	 * 2-vendedor.getCodigoVendedor()
+	 * 3-dataDoPedido 
+	 * 4-totalDaVenda 
+	 * 5-produtos.toString()
 	 */
-	public void recuperarArquivoGUI() {
+	public void recuperarArquivoGUI() {// Recupera todo o arquivo
 		String linhaAtual = null;
 		DecimalFormat decimalFormater = new DecimalFormat("#,###.00");
+		StringBuilder retornoDaLeitura = new StringBuilder();
+		String[] registroDoPedido;
+		String produtosToString;
+		String[] produtos;
+		String[] produtosSplit;
 		try {
-			while ((linhaAtual = buffReader.readLine()) != null) {
-				String[] registroDoPedido = linhaAtual.split(";");
+			while ((linhaAtual = buffReader.readLine()) != null) {// enquanto não ler até a ultima linha
+				registroDoPedido = linhaAtual.split(";");
 
-				GUI.campoDeRetornoPaginacao.setText(
-						GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Código do pedido: " + registroDoPedido[0]);
-				GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n   "
-						+ "Código do vendedor: " + registroDoPedido[2]);
-				GUI.campoDeRetornoPaginacao.setText(
-						GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Data do pedido: " + registroDoPedido[3]);
-				GUI.campoDeRetornoPaginacao.setText(
-						GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Código do Cliente: " + registroDoPedido[1]);
-
-				GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Produtos: ");
-				String produtosToString = registroDoPedido[5].substring(1, registroDoPedido[5].length() - 1);
-				String[] produtos = produtosToString.split("/");
+				retornoDaLeitura.append("\nCódigo do pedido: " + registroDoPedido[0]);
+				retornoDaLeitura.append("\nCódigo do vendedor: " + registroDoPedido[2]);
+				retornoDaLeitura.append("\nData do pedido: " + registroDoPedido[3]);
+				retornoDaLeitura.append("\nCódigo do Cliente: " + registroDoPedido[1]);
+				retornoDaLeitura.append("\nProdutos: ");
+				
+				produtosToString = registroDoPedido[5].substring(1, registroDoPedido[5].length() - 1);
+				produtos = produtosToString.split("/");
 				for (Object produto : produtos) {
 					if (!produto.toString().equals("")) {
-						String[] produtosSplit = ((String) produto).split(":");
-						GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n   "
-								+ "    Código do produto: " + produtosSplit[0] + " Valor do produto: R$ "
-								+ decimalFormater.format(Float
-										.valueOf(produtosSplit[1].trim().substring(0, produtosSplit[1].length() - 2))));
+						produtosSplit = ((String) produto).split(":");
+						retornoDaLeitura.append("\n      Código do produto: " + produtosSplit[0] + " Valor do produto: R$ "+ decimalFormater.format(Float.valueOf(produtosSplit[1].trim().substring(0, produtosSplit[1].length() - 2))));
 					}
 				}
-				GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n   "
-						+ "Total do pedido: R$ " + decimalFormater.format(Float.valueOf(registroDoPedido[4])));
+				retornoDaLeitura.append("\nTotal do pedido: R$ " + decimalFormater.format(Float.valueOf(registroDoPedido[4]))+ "\n");
 			}
+			GUI.campoDeRetornoPaginacao.setText(retornoDaLeitura.toString());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -178,46 +168,44 @@ public class GerenciadorDeArquivo {
 	 * 4-totalDaVenda 
 	 * 5-produtos.toString()
 	 */
-	public void recuperarArquivoPaginacaoGUI2(int qtdRegistroPagina) {
+	public void recuperarArquivoPaginacaoGUI(int qtdRegistroPagina) {// Recupera arquivo com paginação
 		String informacaoLinhaAtual = null;
 		DecimalFormat decimalFormater = new DecimalFormat("#,###.00");
+		StringBuilder retornoDaLeitura = new StringBuilder();
+		String[] registroDoPedido;
+		String produtosToString;
+		String[] produtos;
+		String[] produtosSplit;
 		GUI.fimPaginacao = true;
 		try {
-			int posicaoLinhaDeOrigem = qtdRegistroPagina * GUI.paginaAtual;
+			int posicaoLinhaDeOrigem = qtdRegistroPagina * GUI.paginaAtual;// Multiplica a quantidade de registro por páginas selecionada pelo usuário pelo número da página atual para saber a partir de qual linha será lido o registro 
 			int posicaoLinhaAtual = 0;
-			while (posicaoLinhaAtual < posicaoLinhaDeOrigem && (informacaoLinhaAtual = buffReader.readLine()) != null) {
+			while (posicaoLinhaAtual < posicaoLinhaDeOrigem && (informacaoLinhaAtual = buffReader.readLine()) != null) {// Enquanto não chegar na linha calculada e ainda tiver linhas no arquivo
 				posicaoLinhaAtual++;
 			}
 			posicaoLinhaAtual = 0;
-			while ((informacaoLinhaAtual = buffReader.readLine()) != null && posicaoLinhaAtual < qtdRegistroPagina) {
-				GUI.fimPaginacao = false;
-				String[] registroDoPedido = informacaoLinhaAtual.split(";");
+			while ((informacaoLinhaAtual = buffReader.readLine()) != null && posicaoLinhaAtual < qtdRegistroPagina) { //Enquanto não atingir a quantidade de linhas da paginação e ainda tiver linhas
+				GUI.fimPaginacao = false;// Informa que não está na última página
+				registroDoPedido = informacaoLinhaAtual.split(";");
 
-				GUI.campoDeRetornoPaginacao.setText(
-						GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Código do pedido: " + registroDoPedido[0]);
-				GUI.campoDeRetornoPaginacao.setText(
-						GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Código do vendedor: " + registroDoPedido[2]);
-				GUI.campoDeRetornoPaginacao.setText(
-						GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Data do pedido: " + registroDoPedido[3]);
-				GUI.campoDeRetornoPaginacao.setText(
-						GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Código do Cliente: " + registroDoPedido[1]);
+				retornoDaLeitura.append("\nCódigo do pedido: " + registroDoPedido[0]);
+				retornoDaLeitura.append("\nCódigo do vendedor: " + registroDoPedido[2]);
+				retornoDaLeitura.append("\nData do pedido: " + registroDoPedido[3]);
+				retornoDaLeitura.append("\nCódigo do Cliente: " + registroDoPedido[1]);
+				retornoDaLeitura.append("\nProdutos: ");
 
-				GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Produtos: ");
-				String produtosToString = registroDoPedido[5].substring(1, registroDoPedido[5].length() - 1);
-				String[] produtos = produtosToString.split("/");
+				produtosToString = registroDoPedido[5].substring(1, registroDoPedido[5].length() - 1);
+				produtos = produtosToString.split("/");
 				for (Object produto : produtos) {
 					if (!produto.toString().equals("")) {
-						String[] produtosSplit = ((String) produto).split(":");
-						GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n   "
-								+ "    Código do produto: " + produtosSplit[0] + " Valor do produto: R$ "
-								+ decimalFormater.format(Float
-										.valueOf(produtosSplit[1].trim().substring(0, produtosSplit[1].length() - 2))));
+						produtosSplit = ((String) produto).split(":");
+						retornoDaLeitura.append("\n      Código do produto: " + produtosSplit[0] + " Valor do produto: R$ " + decimalFormater.format(Float.valueOf(produtosSplit[1].trim().substring(0, produtosSplit[1].length() - 2))));
 					}
 				}
-				GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n   "
-						+ "Total do pedido: R$ " + decimalFormater.format(Float.valueOf(registroDoPedido[4])) + "\n");
+				retornoDaLeitura.append("\nTotal do pedido: R$ " + decimalFormater.format(Float.valueOf(registroDoPedido[4])) + "\n");
 				posicaoLinhaAtual++;
 			}
+			GUI.campoDeRetornoPaginacao.setText(retornoDaLeitura.toString());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -229,12 +217,13 @@ public class GerenciadorDeArquivo {
 
 	public long quantidadeDeLinhasDoArquivo() {
 		long numOfLines = 0;
-		if (arquivo != null) {
-			try (Stream<String> lines = Files.lines(arquivo.toPath(), Charset.defaultCharset())) {
-				numOfLines = lines.count();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		if (arquivo == null) {
+			arquivo = new File(nomeDoArquivo);
+		}
+		try (Stream<String> lines = Files.lines(arquivo.toPath(), Charset.defaultCharset())) {
+			numOfLines = lines.count();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		return numOfLines;
 	}

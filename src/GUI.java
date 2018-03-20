@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.annotation.processing.SupportedSourceVersion;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -56,7 +55,7 @@ public class GUI {
 				Object[] entradaDoUsuário = {
 					    "Quantidade de registros por página (0 - Sem paginação): ", campoDeEntradaDoUsuarioPaginacao, // lê o campo de paginação digitado pelo usuário
 					    "Quantidade de registros a serem criados: ", campoDeEntradaDoUsuario // lê o campo de quantidade de registros digitado pelo usuário
-				}; // acção relacionado ao botão pedidos por quantidade
+				}; // acão relacionado ao botão pedidos por quantidade
 
 				Integer opt = JOptionPane.showOptionDialog(null, entradaDoUsuário, "Criação por quantidade de registros", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null); // Caixa de diálogo para inserir a qntde de registros
 				if (opt == 0) {
@@ -165,7 +164,7 @@ public class GUI {
 				paginaAtual = 0;
 				Object[] entradaDoUsuário = {
 					    "Quantidade de registros por página (0 - Sem paginação): ", campoDeEntradaDoUsuarioPaginacao
-				};// acção relacionado ao botão consultar base
+				};// acão relacionado ao botão consultar base
 
 				Integer opt = JOptionPane.showOptionDialog(null, entradaDoUsuário, "Consulta", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null); // Caixa de diálogo para consulta dos dados
 				if (opt == 0) {
@@ -177,18 +176,18 @@ public class GUI {
 					btnAnterior.addActionListener(new ActionListener() {// Ação ao usar o botão
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							if(paginaAtual > 0){
+							if(paginaAtual > 0){// Verifica se não é a primeira página 
 								GUI.paginaAtual--;
 								GUI.campoDeRetornoPaginacao.setText(null);
 								arquivoDeVendas.abrirArquivoParaLeitura();
-								arquivoDeVendas.recuperarArquivoPaginacaoGUI2(qtdRegistroPorPagina);
+								arquivoDeVendas.recuperarArquivoPaginacaoGUI(qtdRegistroPorPagina);
 								arquivoDeVendas.fecharArquivoParaLeitura();
 								GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Página: " + (GUI.paginaAtual+1)+"/"+GUI.totalPaginacao);
 							}
 						}
 					});
 					
-					final JButton btnProximo = new JButton("Próximo");
+					final JButton btnProximo = new JButton("Próximo");// Criação do botão próximo
 					btnProximo.setToolTipText("");
 					btnProximo.addActionListener(new ActionListener() {
 						@Override
@@ -196,12 +195,12 @@ public class GUI {
 								GUI.paginaAtual++;
 								GUI.campoDeRetornoPaginacao.setText(null);
 								arquivoDeVendas.abrirArquivoParaLeitura();
-								arquivoDeVendas.recuperarArquivoPaginacaoGUI2(qtdRegistroPorPagina);
-								if(GUI.fimPaginacao){
+								arquivoDeVendas.recuperarArquivoPaginacaoGUI(qtdRegistroPorPagina);
+								if(GUI.fimPaginacao){// verifica se não é a última página
 									GUI.paginaAtual--;
 									arquivoDeVendas.fecharArquivoParaLeitura();
 									arquivoDeVendas.abrirArquivoParaLeitura();
-									arquivoDeVendas.recuperarArquivoPaginacaoGUI2(qtdRegistroPorPagina);
+									arquivoDeVendas.recuperarArquivoPaginacaoGUI(qtdRegistroPorPagina);
 								}
 								arquivoDeVendas.fecharArquivoParaLeitura();
 								GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Página: " + (GUI.paginaAtual+1)+"/"+GUI.totalPaginacao);
@@ -211,14 +210,14 @@ public class GUI {
 					long tempoInicial = Calendar.getInstance().getTimeInMillis();
 					
 					arquivoDeVendas.abrirArquivoParaLeitura();
-					if(qtdRegistroPorPagina > 0){
-						long quantidadeTotalDeLinhas = arquivoDeVendas.quantidadeDeLinhasDoArquivo();
+					if(qtdRegistroPorPagina > 0){// Leitura com paginação
+						long quantidadeTotalDeLinhas = arquivoDeVendas.quantidadeDeLinhasDoArquivo();// Busca quantas linhas tem o arquivo
 						
-						totalPaginacao = (int) (quantidadeTotalDeLinhas / qtdRegistroPorPagina);
-						if(quantidadeTotalDeLinhas % qtdRegistroPorPagina  != 0) {
+						totalPaginacao = (int) (quantidadeTotalDeLinhas / qtdRegistroPorPagina);// Divide a paginação escolhida pelo usuário pela quantidade total de linhas
+						if(quantidadeTotalDeLinhas % qtdRegistroPorPagina  != 0) {// Se a divisão sobrar resto, adiciona uma página
 							totalPaginacao++;
 						}
-						arquivoDeVendas.recuperarArquivoPaginacaoGUI2(qtdRegistroPorPagina);
+						arquivoDeVendas.recuperarArquivoPaginacaoGUI(qtdRegistroPorPagina);// Lê arquivo com a paginação passada por parâmetro
 						arquivoDeVendas.fecharArquivoParaLeitura();
 						long tempoExecucao = Calendar.getInstance().getTimeInMillis() - tempoInicial;
 						GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n\nTempo de Execução: "+tempoExecucao+" milissegundos");
@@ -231,11 +230,11 @@ public class GUI {
 				
 						GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n   " + "Página: " + (GUI.paginaAtual+1)+"/"+GUI.totalPaginacao);
 						JOptionPane.showOptionDialog(null, outScrollInformacoesDeRetorno, "Leitura - Paginação", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[] {btnAnterior, btnProximo}, null);
-					}else{
+					}else{ // Leitura sem paginação
 						GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n###########################################################################################################################");
 						GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\nOpção selecionada: Consultar base");
 						GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n\nRegistros: ");
-						arquivoDeVendas.recuperarArquivoGUI();
+						arquivoDeVendas.recuperarArquivoGUI();// Lê arquivo todo
 						arquivoDeVendas.fecharArquivoParaLeitura();
 						long tempoExecucao = Calendar.getInstance().getTimeInMillis() - tempoInicial;
 						GUI.campoDeRetornoPaginacao.setText(GUI.campoDeRetornoPaginacao.getText() + "\n\nTempo de Execução: "+tempoExecucao+" milissegundos");
